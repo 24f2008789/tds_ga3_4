@@ -2,8 +2,11 @@ name: Daily Auto Commit
 
 on:
   schedule:
-    - cron: '17 3 * * *'   # Runs daily at 03:17 UTC (specific time, no wildcards)
-  workflow_dispatch:       # Allows manual triggering
+    - cron: '17 3 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   auto-commit:
@@ -12,6 +15,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          persist-credentials: true
 
       - name: 24f2008789@ds.study.iitm.ac.in - Generate daily update
         run: |
@@ -19,8 +24,8 @@ jobs:
 
       - name: Commit and push changes
         run: |
-          git config --global user.name "DevSync Bot"
-          git config --global user.email "24f2008789@ds.study.iitm.ac.in"
+          git config user.name "DevSync Bot"
+          git config user.email "24f2008789@ds.study.iitm.ac.in"
           git add daily-log.txt
           git commit -m "Automated daily commit - $(date)" || echo "No changes to commit"
           git push
